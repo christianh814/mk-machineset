@@ -1,6 +1,6 @@
 # Create Infra Node Machine Sets
 
-Quick and Dirty shell script to create machinesets
+Quick and Dirty shell script to create machinesets as seen on the Infra Node [Twitch Stream](https://youtu.be/9VNjDh1vPXI?t=3552)
 
 ## Setup 
 
