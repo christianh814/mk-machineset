@@ -18,7 +18,7 @@ if [[ ${1} == "vsphere" ]] ; then
 	[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
 	export CLUSTERID=${clusterid}
 	envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-0.yaml
-	echo "DONE, manifests should be under ./out - Make sure to change instance size if you don't want 4x16"
+	echo "DONE, manifests should be under ./out - EDIT THESE MANIFESTS FOR YOUR VSPHERE ENVIORNMENT"
 else
 	templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE.yaml
 	[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit

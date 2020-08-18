@@ -49,8 +49,8 @@ spec:
             name: worker-user-data
           workspace:
             datacenter: Datacenter
-            datastore: datastore1
+            datastore: datastore
             folder: /Datacenter/vm/${CLUSTERID}
-            server: vsphere.cloud.chx
+            server: vsphere.example.com
 status:
   replicas: 0
