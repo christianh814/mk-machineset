@@ -35,6 +35,17 @@ Run the script for vSphere
 ./mk-machineset.sh vsphere
 ```
 
+
+## Apply
+
+Apply the manifest
+
+> :warning:  If using vSphere...you **MUST** edit these files before you apply them. 
+
+```shell
+oc apply -f ./out/
+```
+
 ## SLA
 
 I make no guarantees for this QnD script, so YMMV. Use caution.
