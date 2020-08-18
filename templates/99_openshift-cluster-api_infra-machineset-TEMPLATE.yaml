@@ -1,0 +1,71 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  creationTimestamp: null
+  labels:
+    machine.openshift.io/cluster-api-cluster: ${CLUSTERID}
+  name: ${CLUSTERID}-infra-${ZONE}
+  namespace: openshift-machine-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: ${CLUSTERID}
+      machine.openshift.io/cluster-api-machineset: ${CLUSTERID}-infra-${ZONE}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        machine.openshift.io/cluster-api-cluster: ${CLUSTERID}
+        machine.openshift.io/cluster-api-machine-role: infra
+        machine.openshift.io/cluster-api-machine-type: infra
+        machine.openshift.io/cluster-api-machineset: ${CLUSTERID}-infra-${ZONE}
+    spec:
+      taints:
+      - effect: NoSchedule
+        key: node-function
+        value: infra
+      metadata:
+        creationTimestamp: null
+        labels:
+          node-role.kubernetes.io/infra: ""
+      providerSpec:
+        value:
+          ami:
+            id: ${AMI}
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              iops: 0
+              volumeSize: 120
+              volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: ${CLUSTERID}-worker-profile
+          instanceType: m4.2xlarge
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          placement:
+            availabilityZone: ${ZONE}
+            region: ${REGION}
+          publicIp: null
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - ${CLUSTERID}-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - ${CLUSTERID}-private-${ZONE}
+          tags:
+          - name: kubernetes.io/cluster/${CLUSTERID}
+            value: owned
+          userDataSecret:
+            name: worker-user-data
+status:
+  replicas: 0
