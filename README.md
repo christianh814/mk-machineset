@@ -2,6 +2,8 @@
 
 Quick and Dirty shell script to create machinesets as seen on the Infra Node [Twitch Stream](https://youtu.be/9VNjDh1vPXI?t=3552)
 
+> :rotating_light: This script has been tested on OCP 4.5
+
 ## Setup 
 
 Edit this script with your variables depending on your env
