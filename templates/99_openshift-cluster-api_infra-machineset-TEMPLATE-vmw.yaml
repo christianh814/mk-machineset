@@ -48,9 +48,9 @@ spec:
           userDataSecret:
             name: worker-user-data
           workspace:
-            datacenter: Datacenter
-            datastore: datastore
+            datacenter: ${DATACENTER}
+            datastore: ${DATASTORE}
             folder: /Datacenter/vm/${CLUSTERID}
-            server: vsphere.example.com
+            server: ${VSPHERE_SERVER}
 status:
   replicas: 0

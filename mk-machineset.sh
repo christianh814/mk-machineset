@@ -1,15 +1,20 @@
 #!/bin/bash
+# Cleaning out old outdir
 rm -rf ./out
 ###
-# For vSphere, just leave dummy values for region/zones/ami
-
 # Output of: oc get -o jsonpath='{.status.infrastructureName}' infrastructure cluster 
 clusterid="cluster2-79bxd"
-# AWS Region and zone 
+
+# AWS Region and zone  and AMI info
 region="us-east-1"
 zones=(us-east-1a us-east-1b us-east-1c)
-# AMI of RHCOS
 ami="ami-00e472e63fc0dbe01"
+
+# vSphere datacenter, datastore and server info
+datacenter="Datacenter"
+datastore="datastore1"
+vspheresrv="vsphere.example.com"
+
 ###
 mkdir -p ./out/
 if [[ ${1} == "vsphere" ]] ; then
@@ -17,8 +22,11 @@ if [[ ${1} == "vsphere" ]] ; then
 	templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE-vmw.yaml
 	[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
 	export CLUSTERID=${clusterid}
+	export DATACENTER=${datacenter}
+	export DATASTORE=${datastore}
+	export VSPHERE_SERVER=${vspheresrv}
 	envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-0.yaml
-	echo "DONE, manifests should be under ./out - EDIT THESE MANIFESTS FOR YOUR VSPHERE ENVIORNMENT"
+	echo "DONE, manifests should be under ./out - Make sure to change the properties if you don't want a 4x16 server"
 else
 	templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE.yaml
 	[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
