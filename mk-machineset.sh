@@ -1,7 +1,8 @@
 #!/bin/bash
+
 # Cleaning out old outdir
 rm -rf ./out
-###
+
 # Output of: oc get -o jsonpath='{.status.infrastructureName}' infrastructure cluster 
 clusterid="cluster2-79bxd"
 
@@ -15,32 +16,40 @@ datacenter="Datacenter"
 datastore="datastore1"
 vspheresrv="vsphere.example.com"
 
-###
+# Create the outdir
 mkdir -p ./out/
-if [[ ${1} == "vsphere" ]] ; then
-	echo -n "Creating MachineSet manifests (vSphere)..."
-	templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE-vmw.yaml
-	[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
-	export CLUSTERID=${clusterid}
-	export DATACENTER=${datacenter}
-	export DATASTORE=${datastore}
-	export VSPHERE_SERVER=${vspheresrv}
-	envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-0.yaml
-	echo "DONE, manifests should be under ./out - Make sure to change the properties if you don't want a 4x16 server"
-else
-	templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE.yaml
-	[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
-	echo -n "Creating MachineSet manifests (AWS)..."
-	for zone in ${!zones[*]}
-	do
-		export CLUSTERID=${clusterid}
-		export REGION=${region}
-		export ZONE=${zones[${zone}]}
-		export AMI=${ami}
-		envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-${zone}.yaml
-	done
-	echo "DONE, manifests should be under ./out - Make sure to change the instance type if you don't want m4.2xlarge"
-fi
+
 ###
+case "$1" in
+	vsphere)
+		echo -n "Creating MachineSet manifests (vSphere)..."
+		templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE-vmw.yaml
+		[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
+		export CLUSTERID=${clusterid}
+		export DATACENTER=${datacenter}
+		export DATASTORE=${datastore}
+		export VSPHERE_SERVER=${vspheresrv}
+		envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-0.yaml
+		echo "DONE, manifests should be under ./out - Make sure to change the properties if you don't want a 4x16 server"
+	;;
+	aws)
+		templatefile=./templates/99_openshift-cluster-api_infra-machineset-TEMPLATE.yaml
+		[[ ! -e ${templatefile} ]] && echo "FATAL: ${templatefile} not found" && exit
+		echo -n "Creating MachineSet manifests (AWS)..."
+		for zone in ${!zones[*]}
+		do
+			export CLUSTERID=${clusterid}
+			export REGION=${region}
+			export ZONE=${zones[${zone}]}
+			export AMI=${ami}
+			envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-${zone}.yaml
+		done
+		echo "DONE, manifests should be under ./out - Make sure to change the instance type if you don't want m4.2xlarge"
+	;;
+	*)
+		echo "Usage: $(basename $0) [vsphere|aws]"
+		exit 1
+	;;
+esac
 ##
 ##
