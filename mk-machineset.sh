@@ -12,9 +12,14 @@ zones=(us-east-1a us-east-1b us-east-1c)
 ami="ami-00e472e63fc0dbe01"
 
 # vSphere datacenter, datastore and server info
+#Datacenter = the name of the datacenter you have create in Vsphere
 datacenter="Datacenter"
+#datastore = the name of the datastore you want your VMs to deploy onto
 datastore="datastore1"
+#vspheresrv = the dns name of your vcenter server
 vspheresrv="vsphere.example.com"
+#vmnet = the name of the port group that you are using
+vmnet="VM Network"
 
 # Create the outdir
 mkdir -p ./out/
@@ -29,6 +34,7 @@ case "$1" in
 		export DATACENTER=${datacenter}
 		export DATASTORE=${datastore}
 		export VSPHERE_SERVER=${vspheresrv}
+		export VSPHERE_NET=${vmnet}
 		envsubst < ${templatefile} > ./out/99_openshift-cluster-api_infra-machineset-0.yaml
 		echo "DONE, manifests should be under ./out - Make sure to change the properties if you don't want a 4x16 server"
 	;;

@@ -36,6 +36,7 @@ vspheresrv="vsphere.example.com"
 * `datacenter` is the name of your datacenter
 * `datastore` is the name of the datastore you want the VMs to be installed on
 * `vspheresrv` is the hostname of your vSphere/vCenter endpoint.
+* `vmnet` is the name of the port group you want your VMs to use.  
 
 
 ## Run
